@@ -1,4 +1,4 @@
-#include "timer.h"
+#include "TeensyTimer.h"
 #include "TeensyTimerTool.h"
 
 namespace TeensyTimerTool
@@ -13,7 +13,7 @@ namespace TeensyTimerTool
     {
         if (callback == nullptr) return postError(errorCode::callback);
         if (periodic && reload == 0) return postError(errorCode::reload);
-       
+
         if (timerChannel == nullptr)
         {
             if (timerGenerator != nullptr) // use timer passed in during construction
@@ -48,4 +48,4 @@ namespace TeensyTimerTool
     }
 
     errorFunc_t Timer::errFunc = nullptr;
-} 
+}

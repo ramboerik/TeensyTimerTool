@@ -9,7 +9,7 @@
     #include "timer.h"
    #include "ErrorHandling/ErrorCodes.h"
     #include "Teensy/TCK/TCK.h"
-#elif defined(T3_0)    
+#elif defined(T3_0)
     #include "timer.h"
     #include "ErrorHandling/ErrorCodes.h"
     #include "Teensy/TCK/TCK.h"
@@ -43,6 +43,10 @@
     #include "Teensy/TCK/TCK.h"
     #include "Teensy/GPT/GPT.h"
     #include "Teensy/TMR/TMR.h"
+
+#elif defined(STM32F4xx)
+    #include "STM32F4/TCK/TCK.h"
+    //#include "STM32F4/GPT/GPT.h"
 
 #else
     #error "Board not supported"
