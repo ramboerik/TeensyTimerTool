@@ -28,6 +28,9 @@
 #define HAS_TCK 20
 #include "imxrt.h"
 
+#elif defined(STM32F4xx) && defined(ARDUINO_ARCH_STM32)
+#define HAS_TCK 20
+
 #elif defined(ESP32)
 //...
 

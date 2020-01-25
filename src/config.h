@@ -23,6 +23,9 @@ namespace TeensyTimerTool
 #elif defined(TLC)
     constexpr TimerGenerator* timerPool[] = {TCK};
 
+#elif defined(STM32F4xx)
+    constexpr TimerGenerator* timerPool[] = {TCK};
+
 #elif defined(ESP32)
     constexpr TimerGenerator* timerPool[] = {TCK};
 
