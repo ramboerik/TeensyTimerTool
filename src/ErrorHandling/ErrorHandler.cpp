@@ -13,7 +13,7 @@ namespace TeensyTimerTool
         {
             case errorCode::OK:             txt = "OK"; break;
 
-            // warnings        
+            // warnings
             case errorCode::periodOverflow: txt = "Timer period too long, will be clamped to max"; break;
 
             // general errors
@@ -26,17 +26,21 @@ namespace TeensyTimerTool
                 break;
         }
 
-        if ((int)code < 0)
+        int int_code = static_cast<int>(code);
+        if (int_code < 0)
         {
-            stream->printf("Warning: %i: %s\n", -(int)code, txt);
+            stream->print("Warning: ");
+            stream->print(int_code);
+            stream->println(txt);
             return;
         }
-
-        stream->printf("Error: %i: %s\n", code, txt);
+        stream->print("Error: ");
+        stream->print(int_code);
+        stream->println(txt);
 
         while (true)
         {
-            digitalWriteFast(LED_BUILTIN, !digitalReadFast(LED_BUILTIN));
+            digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
             delay(50);
         }
     }
