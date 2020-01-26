@@ -7,6 +7,7 @@ namespace TeensyTimerTool
     class ITimerChannel
     {
      public:
+        virtual ~ITimerChannel() {}
         virtual void begin(callback_t callback, unsigned period, bool oneShot) = 0;
         virtual void setPeriod(uint32_t microSeconds);
         virtual uint32_t getPeriod() { return 0; }

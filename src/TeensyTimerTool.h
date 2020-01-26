@@ -48,7 +48,7 @@
     #include "TeensyTimer.h"
     #include "ErrorHandling/ErrorCodes.h"
     #include "STM32F4/TCK/TCK.h"
-    //#include "STM32F4/GPT/GPT.h"
+    #include "STM32F4/GPT/GPT.h"
 
 #else
     #error "Board not supported"
