@@ -74,7 +74,4 @@ namespace TeensyTimerTool
             }
         }
     }
-
-    constexpr TimerGenerator* TCK = TCK_t::getTimer;
-
 } // namespace TeensyTimerTool

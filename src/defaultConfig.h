@@ -30,6 +30,9 @@ namespace TeensyTimerTool
 
 #elif defined(UNO)
     TimerGenerator* const timerPool[] = {TCK};
+#elif defined(STM32F4xx)
+    TimerGenerator* const timerPool[] = {GPT1, GPT2, GPT3, GPT4, GPT5, GPT6, GPT7, GPT8, GPT9, GPT10, GPT11, GPT12, GPT13, GPT14, TCK};
+
 #endif
     constexpr unsigned timerCnt = sizeof(timerPool) / sizeof(timerPool[0]);
 

@@ -38,22 +38,24 @@ namespace TeensyTimerTool
             setCallback(nullptr);
         }
 
-        void begin(callback_t cb, unsigned micros, bool periodic) override {
+        errorCode begin(callback_t cb, uint32_t micros, bool periodic) override {
             isPeriodic = periodic;
             setCallback(cb);
             m_timer.attachInterrupt(GptChannel::isr, (void*)this);
 
             if(!isPeriodic){
                 // wait to start until trigger is called
-                return;
+                return errorCode::OK;
             }
             m_timer.setOverflow(micros, MICROSEC_FORMAT);
             m_timer.resume();
+            return errorCode::OK;
         }
 
-        void trigger(uint32_t micros) override { // not working, triggered immediately, something not reset with setOverflow?
+        errorCode trigger(uint32_t micros) override { // not working, triggered immediately, something not reset with setOverflow?
             m_timer.setOverflow(micros, MICROSEC_FORMAT);
             m_timer.resume();
+            return errorCode::OK;
         }
 
         void setPeriod(uint32_t micros) override {

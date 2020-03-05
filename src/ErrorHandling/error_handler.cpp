@@ -1,5 +1,5 @@
+#include <Arduino.h>
 #include "error_handler.h"
-#include "core_pins.h"
 #include "types.h"
 
 namespace TeensyTimerTool
@@ -48,14 +48,19 @@ namespace TeensyTimerTool
 
         if ((int)code < 0) // in case of warnings we return after printing
         {
-            stream.printf("W-%i: %s\n", -(int)code, txt);
+            stream.print("W- ");
+            stream.print((int)code);
+            stream.print(": ");
+            stream.println(txt);
             return;
         }
-
-        stream.printf("E-%i: %s\n", code, txt); // in case of errors we don't return
+        stream.print("E- ");
+        stream.print((int)code);
+        stream.print(": ");
+        stream.println(txt);
         while (true)
         {
-            digitalWriteFast(LED_BUILTIN, !digitalReadFast(LED_BUILTIN));
+            digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
             delay(50);
         }
     }

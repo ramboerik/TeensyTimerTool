@@ -12,7 +12,7 @@ namespace TeensyTimerTool
         inline TckChannel() { triggered = false; }
         inline virtual ~TckChannel(){};
 
-        inline void begin(callback_t cb, unsigned period, bool periodic)
+        inline errorCode begin(callback_t cb, uint32_t period, bool periodic) override
         {
             triggered = false;
             this->periodic = periodic;
@@ -20,27 +20,30 @@ namespace TeensyTimerTool
             this->callback = cb;
 
             startCNT = dwt_getCycles();
+            return errorCode::OK;
         }
 
-        inline void start()
+        inline void start() override
         {
             this->startCNT = dwt_getCycles();
             this->triggered = true;
         }
 
-        inline void stop()
+        inline errorCode stop() override
         {
             this->triggered = false;
+            return errorCode::OK;
         }
 
-        inline void setPeriod(uint32_t microSeconds);
-        inline uint32_t getPeriod(void);
+        inline void setPeriod(uint32_t microSeconds) override;
+        inline uint32_t getPeriod(void) override;
 
-        inline void trigger(uint32_t delay) // µs
+        inline errorCode trigger(uint32_t delay) override// µs
         {
             this->startCNT = dwt_getCycles();
             this->period = delay * (F_CPU / 1'000'000) - 68;
             this->triggered = true;
+            return errorCode::OK;
         }
 
      protected:

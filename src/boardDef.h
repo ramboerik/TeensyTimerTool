@@ -8,7 +8,7 @@ namespace TeensyTimerTool
 
     // TEENSYDUINO  ==========================================================================
     #if defined(TEENSYDUINO)
-    
+
         #if defined(__MKL26Z64__)
         #define TLC
         #define HAS_TCK 20
@@ -47,6 +47,13 @@ namespace TeensyTimerTool
             extern TimerGenerator *const TCK;
 
         #endif
+
+    #elif defined(STM32F4xx) && defined(ARDUINO_ARCH_STM32)
+        #define HAS_TCK 20
+        extern TimerGenerator *const GPT1, *const GPT2, *const GPT3, *const GPT4, *const GPT5, *const GPT6;
+        extern TimerGenerator *const GPT7, *const GPT8, *const GPT9, *const GPT10, *const GPT11;
+        extern TimerGenerator *const  GPT12, *const  GPT13, *const  GPT14;
+        extern TimerGenerator *const TCK;
 
     // ESP32  ==========================================================================
     #elif defined(ESP32)
