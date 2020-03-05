@@ -11,27 +11,17 @@ namespace TeensyTimerTool
         HardwareTimer m_timer;
         bool isPeriodic;
 
-    public:
-        static inline void isr(HardwareTimer* timer) {
-            if(timer == nullptr){
-                return;
-            }
-
-            GptChannel* me = (GptChannel*)timer->getArg();
-            if(me == nullptr){
-                return;
-            }
-
-            if(!me->isPeriodic){
+        callback_function_t isr = [this](void) {
+            if(!isPeriodic){
                 // stop after one interrupt if running in one shot mode.
-                timer->pause();
+                m_timer.pause();
             }
-
-            callback_t callback = *(me->pCallback);
+            callback_t callback = *(pCallback);
             callback();
-        }
+        };
 
-        GptChannel(TIM_TypeDef* timer, callback_t* cbStorage) : ITimerChannel(cbStorage), m_timer(timer){}
+    public:
+        GptChannel(TIM_TypeDef* timer, callback_t* cbStorage) : ITimerChannel(cbStorage), m_timer(timer){ }
 
         virtual ~GptChannel() {
             m_timer.detachInterrupt();
@@ -41,7 +31,7 @@ namespace TeensyTimerTool
         errorCode begin(callback_t cb, uint32_t micros, bool periodic) override {
             isPeriodic = periodic;
             setCallback(cb);
-            m_timer.attachInterrupt(GptChannel::isr, (void*)this);
+            m_timer.attachInterrupt(isr);
 
             if(!isPeriodic){
                 // wait to start until trigger is called

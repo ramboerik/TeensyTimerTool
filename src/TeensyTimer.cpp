@@ -1,4 +1,4 @@
-#include "timer.h"
+#include "TeensyTimer.h"
 #include "config.h"
 
 namespace TeensyTimerTool
