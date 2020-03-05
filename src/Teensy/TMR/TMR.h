@@ -1,6 +1,7 @@
 #pragma once
 
-#include "TmrChannel.h"
+#include "TMRChannel.h"
+#include "imxrt.h"
 
 namespace TeensyTimerTool
 {
@@ -8,7 +9,7 @@ namespace TeensyTimerTool
     class TMR_t
     {
      public:
-        static ITimerChannel* getTimer();
+        static ITimerChannel* getTimer(); 
 
      protected:
         static bool isInitialized;
@@ -16,23 +17,27 @@ namespace TeensyTimerTool
         static callback_t callbacks[4];
 
         // the following is calculated at compile time
-        static constexpr IRQ_NUMBER_t irq = moduleNr == 0 ? IRQ_QTIMER1 : moduleNr == 1 ? IRQ_QTIMER2 : moduleNr == 2 ? IRQ_QTIMER3 : IRQ_QTIMER4;
-        static constexpr IMXRT_TMR_t* pTMR = moduleNr == 0 ? &IMXRT_TMR1 : moduleNr == 1 ? &IMXRT_TMR2 : moduleNr == 2 ? &IMXRT_TMR3 : &IMXRT_TMR4;
-        static constexpr IMXRT_TMR_CH_t* pCH0 = &pTMR->CH[0];
-        static constexpr IMXRT_TMR_CH_t* pCH1 = &pTMR->CH[1];
-        static constexpr IMXRT_TMR_CH_t* pCH2 = &pTMR->CH[2];
-        static constexpr IMXRT_TMR_CH_t* pCH3 = &pTMR->CH[3];
+        static constexpr IRQ_NUMBER_t irq = moduleNr == 0 ? IRQ_QTIMER1 : moduleNr == 1 ? IRQ_QTIMER2 : moduleNr == 2 ? IRQ_QTIMER3 : IRQ_QTIMER4;       
+        static IMXRT_TMR_t* const pTMR;
+        static IMXRT_TMR_CH_t* const pCH0;
+        static IMXRT_TMR_CH_t* const pCH1;
+        static IMXRT_TMR_CH_t* const pCH2;
+        static IMXRT_TMR_CH_t* const pCH3;
 
         static_assert(moduleNr < 4, "Module number < 4 required");
     };
 
     // IMPLEMENTATION ==================================================================
 
+    template <unsigned moduleNr> IMXRT_TMR_t*    const TMR_t<moduleNr>::pTMR = moduleNr == 0 ? &IMXRT_TMR1 : moduleNr == 1 ? &IMXRT_TMR2 : moduleNr == 2 ? &IMXRT_TMR3 : &IMXRT_TMR4;
+    template <unsigned moduleNr> IMXRT_TMR_CH_t* const TMR_t<moduleNr>::pCH0 = &pTMR->CH[0]; 
+    template <unsigned moduleNr> IMXRT_TMR_CH_t* const TMR_t<moduleNr>::pCH1 = &pTMR->CH[1];
+    template <unsigned moduleNr> IMXRT_TMR_CH_t* const TMR_t<moduleNr>::pCH2 = &pTMR->CH[2];
+    template <unsigned moduleNr> IMXRT_TMR_CH_t* const TMR_t<moduleNr>::pCH3 = &pTMR->CH[3];
+
     template <unsigned moduleNr>
     ITimerChannel* TMR_t<moduleNr>::getTimer()
     {
-        //Serial.printf("getTimer(%d)\n", moduleNr);
-
         if (!isInitialized)
         {
             for (unsigned chNr = 0; chNr < 4; chNr++)
@@ -43,7 +48,7 @@ namespace TeensyTimerTool
             attachInterruptVector(irq, isr); // start
             NVIC_ENABLE_IRQ(irq);
             isInitialized = true;
-            return new TmrChannel(pCH0, &callbacks[0]);
+            return new TMRChannel(pCH0, &callbacks[0]);
         }
 
         for (unsigned chNr = 0; chNr < 4; chNr++)
@@ -51,10 +56,9 @@ namespace TeensyTimerTool
             IMXRT_TMR_CH_t* pCh = &pTMR->CH[chNr];
             if (pCh->CTRL == 0x0000)
             {
-                return new TmrChannel(pCh, &callbacks[chNr]);
+                return new TMRChannel(pCh, &callbacks[chNr]);
             }
         }
-
         return nullptr;
     }
 
@@ -93,10 +97,4 @@ namespace TeensyTimerTool
 
     template <unsigned m>
     callback_t TMR_t<m>::callbacks[4];
-
-    constexpr TimerGenerator* TMR1 = TMR_t<0>::getTimer;
-    constexpr TimerGenerator* TMR2 = TMR_t<1>::getTimer;
-    constexpr TimerGenerator* TMR3 = TMR_t<2>::getTimer;
-    constexpr TimerGenerator* TMR4 = TMR_t<3>::getTimer;
-
-} // namespace TeensyTimerTool
+}
