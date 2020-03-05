@@ -37,13 +37,17 @@ namespace TeensyTimerTool
                 // wait to start until trigger is called
                 return errorCode::OK;
             }
+            m_timer.pause();
             m_timer.setOverflow(micros, MICROSEC_FORMAT);
+            m_timer.refresh();
             m_timer.resume();
             return errorCode::OK;
         }
 
         errorCode trigger(uint32_t micros) override { // not working, triggered immediately, something not reset with setOverflow?
+            m_timer.pause();
             m_timer.setOverflow(micros, MICROSEC_FORMAT);
+            m_timer.refresh();
             m_timer.resume();
             return errorCode::OK;
         }
